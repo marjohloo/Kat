@@ -9,55 +9,184 @@ from ttkbootstrap.constants import *
 class Venato:
 
     def __init__(self):
-        # Initialise
-        self.dat = {}
-        self.gui = {}
-        self.gui["window"] = ttk.Window()
-        self.gui["window"].title("Venato")
-        self.gui["window"].columnconfigure(0, weight=1)
-        self.gui["window"].rowconfigure(0, weight=1)
-        # Create outer frame
-        self.gui["frame_outer"] = ttk.Frame(self.gui["window"])
-        self.gui["frame_outer"].grid(column=0, row=0, sticky=(N, W, S, E))
-        # Create table
+        # Initialise data
+        self.cells = {}
         self.rows = 0
         self.cols = 0
-        self.dat["table"] = []
-        self.gui["table"] = []
-        self.dat["table"].append([])
-        self.gui["table"].append([])
-        self.dat["table"][-1].append("ORIGIN")
-        self.gui["table"][-1].append({})
-        self.gui["table"][-1][-1]["frame"] = ttk.Frame(self.gui["frame_outer"])
-        self.gui["table"][-1][-1]["frame"].grid(column=self.cols, row=self.rows, sticky=(N, W, S, E))
-        self.gui["table"][-1][-1]["button_add_row"] = ttk.Button(self.gui["table"][-1][-1]["frame"], text="R+", command=self.button_add_row, bootstyle="primary")
-        self.gui["table"][-1][-1]["button_add_row"].grid(column=0, row=0, sticky=(N, W, S, E), padx=1, pady=1)
-        self.gui["table"][-1][-1]["button_add_col"] = ttk.Button(self.gui["table"][-1][-1]["frame"], text="C+", command=self.button_add_col, bootstyle="info")
-        self.gui["table"][-1][-1]["button_add_col"].grid(column=1, row=0, sticky=(N, W, S, E), padx=1, pady=1)
-        self.gui["table"][-1][-1]["frame"].columnconfigure(0, weight=1)
-        self.gui["table"][-1][-1]["frame"].columnconfigure(1, weight=1)
-        self.gui["frame_outer"].columnconfigure(self.cols, weight=1)
-        # Debug
-        print(json.dumps(self.dat, indent=4))
-        print(f'rows={self.get_rows()}')
-        print(f'cols={self.get_cols()}')
+        # Initialise window
+        self.window = ttk.Window()
+        self.window.title("Venato")
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+        # Create outer frame
+        self.frame_outer = ttk.Frame(self.window)
+        self.frame_outer.grid(row=0, column=0, sticky=(N, W, S, E))
+        # Create origin cell
+        self.cell_create(self.rows, self.cols, "origin")
+        self.rows += 1
+        self.cols += 1
+        # Grid the cells
+        self.cells_grid()
         # Start main loop
-        self.gui["window"].mainloop()
+        self.window.mainloop()
 
-    def get_rows(self):
-        return len(self.dat["table"])
+    def cell_key(self, row, col):
+        return f'R{row:02}C{col:02}'
 
-    def get_cols(self):
-        return len(self.dat["table"][0])
+    def cell_create(self, row, col, type):
+        # Create empty cell info
+        cell_key = self.cell_key(row, col)
+        self.cells[cell_key] = {}
+        cell = self.cells[cell_key]
+        # Store fixed data
+        cell["key"]   = cell_key
+        cell["type"]  = type
+        cell["row"]   = row
+        cell["col"]   = col
+        cell["frame"] = ttk.Frame(self.frame_outer)
+        cell["value"] = None
+        # Cell type ?
+        if type == "data":
+            self.cell_create_data(cell)
+        elif type == "col":
+            self.cell_create_col(cell)
+        elif type == "row":
+            self.cell_create_row(cell)
+        elif type == "origin":
+            self.cell_create_origin(cell)
+
+    def cell_create_data(self, cell):
+        #cell["frame"].configure(bootstyle="secondary")
+        cell["value"] = 0
+        cell["var"] = ttk.IntVar(value=cell["value"])
+        if False:
+            cell["radio0"] = ttk.Radiobutton(cell["frame"], text="0", variable=cell["var"], value=0, bootstyle="secondary-outline-toolbutton")
+            cell["radio0"].grid(column=0, row=0, sticky=(N, W, S, E))
+            cell["radio1"] = ttk.Radiobutton(cell["frame"], text="1", variable=cell["var"], value=1, bootstyle="danger-outline-toolbutton")
+            cell["radio1"].grid(column=1, row=0, sticky=(N, W, S, E))
+            cell["radio2"] = ttk.Radiobutton(cell["frame"], text="2", variable=cell["var"], value=2, bootstyle="warning-outline-toolbutton")
+            cell["radio2"].grid(column=2, row=0, sticky=(N, W, S, E))
+            cell["radio3"] = ttk.Radiobutton(cell["frame"], text="3", variable=cell["var"], value=3, bootstyle="success-outline-toolbutton")
+            cell["radio3"].grid(column=3, row=0, sticky=(N, W, S, E))
+            cell["frame"].columnconfigure(0, weight=1)
+            cell["frame"].columnconfigure(1, weight=1)
+            cell["frame"].columnconfigure(2, weight=1)
+            cell["frame"].columnconfigure(3, weight=1)
+        elif False:
+            cell["combobox"] = ttk.Combobox(cell["frame"], textvariable=cell["var"], bootstyle="secondary")
+            cell["combobox"]["values"] = (0, 1, 2, 3)
+            cell["combobox"].state(["readonly"])
+            cell["combobox"].grid(column=0, row=0, sticky=(N, W, S, E), padx=0, pady=0)
+            cell["combobox"].bind("<<ComboboxSelected>>", lambda *_, cell=cell: self.combo_changed(cell))
+            cell["frame"].columnconfigure(0, weight=1)
+        else:
+            cell["button"] = ttk.Button(cell["frame"], textvariable=cell["var"], command=lambda *_, cell=cell: self.button_data(cell), bootstyle="secondary")
+            cell["button"].grid(column=0, row=0, sticky=(N, W, S, E))
+            cell["frame"].columnconfigure(0, weight=1)
+
+    def cell_create_col(self, cell):
+        #cell["frame"].configure(bootstyle="info")
+        if False:
+            cell["button_left_col"] = ttk.Button(cell["frame"], text="˂", command=self.button_left_col, bootstyle="info")
+            cell["button_left_col"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=0, pady=0)
+            cell["button_delete_col"] = ttk.Button(cell["frame"], text="X", command=self.button_delete_col, bootstyle="danger")
+            cell["button_delete_col"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=0, pady=0)
+            cell["button_right_col"] = ttk.Button(cell["frame"], text="˃", command=self.button_right_col, bootstyle="info")
+            cell["button_right_col"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["value"] = f'COL {cell["col"]}'
+        cell["var"] = ttk.StringVar(value=cell["value"])
+        cell["entry"] = ttk.Entry(cell["frame"], textvariable=cell["var"], bootstyle="info")
+        cell["entry"].grid(row=0, column=3, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["frame"].columnconfigure(3, weight=1)
+
+    def cell_create_row(self, cell):
+        #cell["frame"].configure(bootstyle="primary")
+        if False:
+            cell["button_up_row"] = ttk.Button(cell["frame"], text="˄", command=self.button_up_row, bootstyle="primary")
+            cell["button_up_row"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=0, pady=0)
+            cell["button_delete_row"] = ttk.Button(cell["frame"], text="X", command=self.button_delete_row, bootstyle="danger")
+            cell["button_delete_row"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=0, pady=0)
+            cell["button_down_row"] = ttk.Button(cell["frame"], text="˅", command=self.button_down_row, bootstyle="primary")
+            cell["button_down_row"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["value"] = f'ROW {cell["row"]}'
+        cell["var"] = ttk.StringVar(value=cell["value"])
+        cell["entry"] = ttk.Entry(cell["frame"], textvariable=cell["var"], bootstyle="primary")
+        cell["entry"].grid(row=0, column=3, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["frame"].columnconfigure(3, weight=1)
+
+    def cell_create_origin(self, cell):
+        cell["button_add_row"] = ttk.Button(cell["frame"], text="R+", command=self.button_add_row, bootstyle="primary")
+        cell["button_add_row"].grid(row= 0, column=0, sticky=(N, W), padx=0, pady=0)
+        cell["frame"].columnconfigure(0, weight=1)
+        cell["button_add_col"] = ttk.Button(cell["frame"], text="C+", command=self.button_add_col, bootstyle="info")
+        cell["button_add_col"].grid(row=0, column=1, sticky=(N, E), padx=0, pady=0)
+        cell["frame"].columnconfigure(1, weight=1)
+
+    def cells_grid(self):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if row == 0:
+                    self.frame_outer.columnconfigure(col, weight=1)
+                cell_key = self.cell_key(row, col)
+                if cell_key in self.cells:
+                    cell = self.cells[cell_key]
+                    cell["frame"].grid(row=row, column=col, sticky=(N, W, S, E), padx=1, pady=1)
 
     def button_add_row(self):
-        self.add_row(f'ROW {self.get_rows()}', True)
+        row = self.rows
+        col = 0
+        self.cell_create(row, col, "row")
+        if self.cols > 1:
+            for col in range(1, self.cols):
+                self.cell_create(row, col, "data")
+        self.rows += 1
+        self.cells_grid()
 
     def button_add_col(self):
-        self.add_col(f'COL {self.get_cols()}', True)
+        row = 0
+        col = self.cols
+        self.cell_create(row, col, "col")
+        if self.rows > 1:
+            for row in range(1, self.rows):
+                self.cell_create(row, col, "data")
+        self.cols += 1
+        self.cells_grid()
 
-    def combo_changed(self, table_entry):
-        combo_val = table_entry["var"].get()
+    def button_data(self, cell):
+        cell_value = cell["var"].get()
+        cell_value += 1
+        if cell_value > 3 or cell_value < 0:
+            cell_value = 0
+        style = "secondary"
+        if cell_value == 3:
+            style = "success"
+        elif cell_value == 2:
+            style = "warning"
+        elif cell_value == 1:
+            style = "danger"
+        cell["var"].set(cell_value)
+        cell["button"].configure(bootstyle=style)
+
+    def button_up_row(self):
+        pass
+
+    def button_down_row(self):
+        pass
+
+    def button_left_col(self):
+        pass
+
+    def button_right_col(self):
+        pass
+
+    def button_delete_row(self):
+        pass
+
+    def button_delete_col(self):
+        pass
+
+    def combo_changed(self, cell):
+        combo_val = cell["var"].get()
         if combo_val < 0 or combo_val > 3:
             combo_val = 0
         style = "secondary"
@@ -67,77 +196,8 @@ class Venato:
             style = "warning"
         elif combo_val == 3:
             style = "success"
-        table_entry["combobox"].configure(bootstyle=style)
-        table_entry["combobox"].selection_clear()
-
-    def add_row(self, title, cells):
-        r = self.get_rows()
-        c = 0
-        # Append new row
-        self.dat["table"].append([])
-        self.gui["table"].append([])
-        # Append new title
-        self.dat["table"][-1].append(title)
-        self.gui["table"][-1].append({})
-        row_title_cell = self.gui["table"][r][c]
-        # Add row title
-        row_title_cell["var"]   = ttk.StringVar(value=title)
-        row_title_cell["entry"] = ttk.Entry(self.gui["frame_outer"], textvariable=row_title_cell["var"], bootstyle="primary")
-        row_title_cell["entry"].grid(column=c, row=r, sticky=(N, W, S, E), padx=1, pady=1)
-        # Add cells too ?
-        if cells:
-            self.add_row_cells(r)
-        # Debug
-        print(json.dumps(self.dat, indent=4))
-        print(f'rows={self.get_rows()}')
-        print(f'cols={self.get_cols()}')
-
-    def add_row_cells(self, r):
-        for c in range(1, self.get_cols()):
-            # Append new cell
-            self.dat["table"][r].append(f'(R{r},C{c})')
-            self.gui["table"][r].append({})
-            cell = self.gui["table"][r][c]
-            # Add cell combo
-            cell["var"] = ttk.IntVar(value=0)
-            cell["combobox"] = ttk.Combobox(self.gui["frame_outer"], textvariable=cell["var"], bootstyle="secondary")
-            cell["combobox"]["values"] = (0, 1, 2, 3)
-            cell["combobox"].state(["readonly"])
-            cell["combobox"].grid(column=c, row=r, sticky=(N, W, S, E), padx=1, pady=1)
-            cell["combobox"].bind("<<ComboboxSelected>>", lambda *_, table_entry=self.gui["table"][-1][-1]: self.combo_changed(table_entry))
-
-    def add_col(self, title, cells):
-        r = 0
-        c = self.get_cols()
-        # Append new title
-        self.dat["table"][0].append(title)
-        self.gui["table"][0].append({})
-        col_title_cell = self.gui["table"][r][c]
-        # Add row title
-        col_title_cell["var"]   = ttk.StringVar(value=title)
-        col_title_cell["entry"] = ttk.Entry(self.gui["frame_outer"], textvariable=col_title_cell["var"], bootstyle="info")
-        col_title_cell["entry"].grid(column=c, row=r, sticky=(N, W, S, E), padx=1, pady=1)
-        # Add cells too ?
-        if cells:
-            self.add_col_cells(c)
-        # Debug
-        print(json.dumps(self.dat, indent=4))
-        print(f'rows={self.get_rows()}')
-        print(f'cols={self.get_cols()}')
-
-    def add_col_cells(self, c):
-        for r in range(1, self.get_rows()):
-            # Append new cell
-            self.dat["table"][r].append(f'(R{r},C{c})')
-            self.gui["table"][r].append({})
-            cell = self.gui["table"][r][c]
-            # Add cell combo
-            cell["var"] = ttk.IntVar(value=0)
-            cell["combobox"] = ttk.Combobox(self.gui["frame_outer"], textvariable=cell["var"], bootstyle="secondary")
-            cell["combobox"]["values"] = (0, 1, 2, 3)
-            cell["combobox"].state(["readonly"])
-            cell["combobox"].grid(column=c, row=r, sticky=(N, W, S, E), padx=1, pady=1)
-            cell["combobox"].bind("<<ComboboxSelected>>", lambda *_, table_entry=self.gui["table"][-1][-1]: self.combo_changed(table_entry))
+        cell["combobox"].configure(bootstyle=style)
+        cell["combobox"].selection_clear()
 
 if __name__ == '__main__':
     venato = Venato()
