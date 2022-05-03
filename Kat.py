@@ -144,10 +144,10 @@ class Kat:
     def cell_create_origin(self, cell):
         cell["value"] = "Target"
         cell["var"] = ttk.StringVar(value=cell["value"])
-        cell["button_add_row"] = ttk.Button(cell["frame"], text="R+", command=self.button_add_row, bootstyle="primary")
+        cell["button_add_row"] = ttk.Button(cell["frame"], text="R+", width=3, command=self.button_add_row, bootstyle="primary")
         cell["button_add_row"].grid(row= 0, column=0, sticky=(N, W), padx=0, pady=0)
         cell["frame"].columnconfigure(0, weight=1)
-        cell["button_add_col"] = ttk.Button(cell["frame"], text="C+", command=self.button_add_col, bootstyle="info")
+        cell["button_add_col"] = ttk.Button(cell["frame"], text="C+", width=3, command=self.button_add_col, bootstyle="info")
         cell["button_add_col"].grid(row=0, column=1, sticky=(N, E), padx=0, pady=0)
         cell["frame"].columnconfigure(1, weight=1)
 
