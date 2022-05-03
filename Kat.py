@@ -1,5 +1,6 @@
 # Package imports
 import json
+import os
 from   tkinter import filedialog
 
 # https://ttkbootstrap.readthedocs.io/en/latest/
@@ -12,17 +13,18 @@ class Kat:
 
     def __init__(self):
         # Initialise data
+        self.title = "KAT"
         self.cells = {}
         self.rows = 0
         self.cols = 0
         self.saved = False
+        self.filename = ""
         # Invalidate outer frame
-        self.frame_outer = None
+        self.frame_table = None
         # Initialise window
         self.window = ttk.Window()
-        self.window.title("KAT")
+        self.window.title(self.title)
         self.window.columnconfigure(0, weight=1)
-        self.window.rowconfigure(0, weight=1)
         # Extract colors from window theme
         self.colors = self.window.style.colors
         print(f'primary={self.colors.get("primary")}')
@@ -32,16 +34,24 @@ class Kat:
         self.menubar  = ttk.Menu(self.window)
         self.menufile = ttk.Menu(self.menubar)
         self.menubar.add_cascade(menu=self.menufile, label="File")
-        self.menufile.add_command(label="New",        accelerator="Ctrl+N",       command=self.file_new)
-        self.menufile.add_command(label="Open...",    accelerator="Ctrl+O",       command=self.file_open)
-        self.menufile.add_command(label="Save",       accelerator="Ctrl+S",       command=self.file_save)
-        self.menufile.add_command(label="Save As...", accelerator="Ctrl+Shift+S", command=self.file_save_as)
+        self.menufile.add_command(label="New",                accelerator="Ctrl+N",       command=self.file_new)
+        #self.menufile.add_command(label="Open...",            accelerator="Ctrl+O",       command=self.file_open)
+        self.menufile.add_command(label="Save",               accelerator="Ctrl+S",       command=self.file_save)
+        self.menufile.add_command(label="Save As...",         accelerator="Ctrl+Shift+S", command=self.file_save_as)
         self.window["menu"] = self.menubar
         # Bind key presses to match menu
         self.window.bind("<Control-n>", lambda *_: self.file_new())
         self.window.bind("<Control-o>", lambda *_: self.file_open())
         self.window.bind("<Control-s>", lambda *_: self.file_save())
         self.window.bind("<Control-S>", lambda *_: self.file_save_as())
+        # Create upper frame
+        self.frame_upper = ttk.Frame(self.window)
+        self.frame_upper.grid(row=0, column=0, sticky=(N, W, S, E))
+        # Add frame controls
+        self.var_title = ttk.StringVar(value="Title")
+        self.entry_title = ttk.Entry(self.frame_upper, textvariable=self.var_title, bootstyle="success")
+        self.entry_title.grid(row=0, column=0, sticky=(N, W, S, E), padx=1, pady=1)
+        self.frame_upper.columnconfigure(0, weight=1)
         # Start with new file
         self.file_new()
         # Start main loop
@@ -60,7 +70,7 @@ class Kat:
         cell["type"]  = type
         cell["row"]   = row
         cell["col"]   = col
-        cell["frame"] = ttk.Frame(self.frame_outer)
+        cell["frame"] = ttk.Frame(self.frame_table)
         cell["value"] = None
         # Cell type ?
         if type == "data":
@@ -112,7 +122,7 @@ class Kat:
             cell["button_right_col"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=0)
         cell["value"] = f'COL {cell["col"]}'
         cell["var"] = ttk.StringVar(value=cell["value"])
-        cell["entry"] = ttk.Entry(cell["frame"], textvariable=cell["var"], bootstyle="info")
+        cell["entry"] = ttk.Entry(cell["frame"], width=14, textvariable=cell["var"], bootstyle="info")
         cell["entry"].grid(row=0, column=3, sticky=(N, W, S, E), padx=0, pady=0)
         cell["frame"].columnconfigure(3, weight=1)
 
@@ -127,7 +137,7 @@ class Kat:
             cell["button_down_row"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=0)
         cell["value"] = f'ROW {cell["row"]}'
         cell["var"] = ttk.StringVar(value=cell["value"])
-        cell["entry"] = ttk.Entry(cell["frame"], textvariable=cell["var"], bootstyle="primary")
+        cell["entry"] = ttk.Entry(cell["frame"], width=28, textvariable=cell["var"], bootstyle="primary")
         cell["entry"].grid(row=0, column=3, sticky=(N, W, S, E), padx=0, pady=0)
         cell["frame"].columnconfigure(3, weight=1)
 
@@ -145,7 +155,10 @@ class Kat:
         for row in range(self.rows):
             for col in range(self.cols):
                 if row == 0:
-                    self.frame_outer.columnconfigure(col, weight=1)
+                    if col == 0:
+                        self.frame_table.columnconfigure(col, weight=2)
+                    else:
+                        self.frame_table.columnconfigure(col, weight=1)
                 cell_key = self.cell_key(row, col)
                 if cell_key in self.cells:
                     cell = self.cells[cell_key]
@@ -206,17 +219,18 @@ class Kat:
                 do_new = True
         if do_new:
             # Destroy widgets
-            if self.frame_outer != None:
-                self.frame_outer.destroy()
-                self.frame_outer = None
+            if self.frame_table != None:
+                self.frame_table.destroy()
+                self.frame_table = None
             # Reset data
             self.cells.clear()
             self.rows = 0
             self.cols = 0
             self.saved = True
-            # Create outer frame
-            self.frame_outer = ttk.Frame(self.window)
-            self.frame_outer.grid(row=0, column=0, sticky=(N, W, S, E))
+            # Create table frame
+            self.frame_table = ttk.Frame(self.window)
+            self.frame_table.grid(row=1, column=0, sticky=(N, W, S, E))
+            self.window.rowconfigure(1, weight=1)
             # Create origin cell
             self.cell_create(self.rows, self.cols, "origin")
             self.rows += 1
@@ -231,7 +245,13 @@ class Kat:
         print(f'do_open = {do_open}')
 
     def file_save(self):
-        pass
+        # Don't have a current filename ?
+        if self.filename == "":
+            # Do a save as instead
+            self.file_save_as()
+        # Have a current filename ?
+        else:
+            self.file_write(self.filename)
 
     def file_save_as(self):
         filename = filedialog.asksaveasfilename(title            = "File > Save As",
@@ -241,6 +261,10 @@ class Kat:
         if len(filename):
             self.file_write(filename)
 
+    def file_view_saved(self):
+        if self.filename != "":
+            os.startfile(self.filename, 'open')
+
     def file_write(self, filename):
         if len(filename) > 0:
             with open(filename, "w") as f:
@@ -249,7 +273,7 @@ class Kat:
                 f.write( '  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n')
                 f.write( '<html xmlns="http://www.w3.org/1999/xhtml">\n')
                 f.write( '  <head>\n')
-                f.write( '    <title>KAT</title>\n')
+                f.write(f'    <title>{self.var_title.get()}</title>\n')
                 f.write( '    <style>\n')
                 f.write( '        body              { font-size: 10pt; font-family: Arial,Helvetica,sans-serif; }\n')
                 f.write( '        p                 { font-size: 10pt; }\n')
@@ -267,7 +291,7 @@ class Kat:
                 f.write( '    </style>\n')
                 f.write( '  </head>\n')
                 # Output raw data
-                f.write('  <!-- KAT_START')
+                f.write(f'  <!-- KAT_START "{self.var_title.get()}"')
                 for row in range(self.rows):
                     for col in range(self.cols):
                         cell_key = self.cell_key(row, col)
@@ -279,15 +303,16 @@ class Kat:
                                 val = '"'+val+'"'
                             # Need a new line ?
                             if col == 0:
-                                f.write(f'\n    {val:12}')
+                                f.write(f'\n    {val}')
                             else:
-                                f.write(f',{val:>12}')
+                                f.write(f', {val}')
+                col_width = int(100/(self.cols+1))
                 f.write('\n  KAT_END -->\n')
                 # Begin body
                 f.write('  <body>\n')
-                f.write('    <h1>KAT</h1>\n')
+                f.write(f'    <h1>{self.var_title.get()}</h1>\n')
                 # Output table data
-                f.write('    <table width=100%>\n')
+                f.write('    <table width="100%">\n')
                 for row in range(self.rows):
                     f.write('      <tr>\n')
                     for col in range(self.cols):
@@ -298,11 +323,11 @@ class Kat:
                             val  = cell["var"].get()
                         hclass = ""
                         if row == 0 and col == 0:
-                            hclass = "primary left"
+                            hclass = "left"
                         elif row == 0:
-                            hclass = "primary"
+                            hclass = ""
                         elif col == 0:
-                            hclass = "info left"
+                            hclass = "left"
                         else:
                             if val == 3:
                                 hclass = "success"
@@ -313,10 +338,12 @@ class Kat:
                             else:
                                 hclass = "secondary"
                         if row == 0:
-                            if hclass == "":
-                                f.write( '        <th>')
-                            else:
-                                f.write(f'        <th class="{hclass}">')
+                            f.write( '        <th')
+                            if hclass != "":
+                                f.write(f' class="{hclass}"')
+                            if col > 0:
+                                f.write(f' width="{col_width}%"')
+                            f.write( '>')
                         else:
                             if hclass == "":
                                 f.write( '        <td>')
@@ -333,6 +360,12 @@ class Kat:
                 f.write('  </body>\n')
                 f.write('</html>\n')
                 f.close()
+                # Retain filename
+                self.filename = filename
+                # Update window
+                self.window.title(f'{self.title}: {os.path.basename(self.filename)}')
+                # Open file in browser
+                os.startfile(self.filename, 'open')
 
     def button_up_row(self):
         pass
