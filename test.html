@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>KAT</title>
+    <style>
+        body              { font-size: 10pt; font-family: Arial,Helvetica,sans-serif; }
+        p                 { font-size: 10pt; }
+        h1                { font-size: 16pt; font-weight: bold; }
+        h2                { font-size: 12pt; font-weight: bold; }
+        table, tr, th, td { font-size: 10pt; text-align: center; vertical-align: top; border: 1px solid black; border-collapse: collapse; padding: 2pt}
+        .left             { text-align: left; }
+        .primary          { background: #4582ec; }
+        .secondary        { background: #adb5bd; }
+        .success          { background: #02b875; }
+        .warning          { background: #f0ad4e; }
+        .primary          { background: #4582ec; }
+        .danger           { background: #d9534f; }
+        .info             { background: #17a2b8; }
+    </style>
+  </head>
+  <!-- KAT_START
+    "Target"    ,"COL 1sd as asd sa",     "COL 2",     "COL 3"
+    "ROW 1 asdasd asd asd asdasd as",           1,           0,           0
+    "ROW 2"     ,           0,           2,           0
+    "ROW 3"     ,           0,           0,           3
+  KAT_END -->
+  <body>
+    <h1>KAT</h1>
+    <table width=100%>
+      <tr>
+        <th class="primary left">Target</th>
+        <th class="primary">COL 1sd as asd sa</th>
+        <th class="primary">COL 2</th>
+        <th class="primary">COL 3</th>
+      </tr>
+      <tr>
+        <td class="info left">ROW 1 asdasd asd asd asdasd as</td>
+        <td class="danger">1</td>
+        <td class="secondary">0</td>
+        <td class="secondary">0</td>
+      </tr>
+      <tr>
+        <td class="info left">ROW 2</td>
+        <td class="secondary">0</td>
+        <td class="warning">2</td>
+        <td class="secondary">0</td>
+      </tr>
+      <tr>
+        <td class="info left">ROW 3</td>
+        <td class="secondary">0</td>
+        <td class="secondary">0</td>
+        <td class="success">3</td>
+      </tr>
+    </table>
+  </body>
+</html>
