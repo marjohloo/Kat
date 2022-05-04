@@ -15,7 +15,7 @@ class Kat:
 
     def __init__(self):
         # Initialise data
-        self.title = "KAT"
+        self.title = "Kerry's Assessment Tracker"
         self.cells = {}
         self.rows = 0
         self.cols = 0
@@ -279,12 +279,14 @@ class Kat:
                         elif '</table' in line:
                             out_table = True
                 f.close()
-            print(f'file_read({filename})')
-            print(f'    title="{title}"')
-            print(f'    out_table={out_table}')
-            print(f'    rows={rows}')
-            print(f'    cols={cols}')
-            print(f'    data[{len(data)}]={data}')
+            if False:
+                print(f'file_read({filename})')
+                print(f'    title="{title}"')
+                print(f'    out_table={out_table}')
+                print(f'    rows={rows}')
+                print(f'    cols={cols}')
+                print(f'    data[{len(data)}]={data}')
+
             if len(data) == 0 or out_table == False:
                 confirm_new = Messagebox.show_error(title   = "File > Open",
                                                     message = "KAT data not found in opened file!",
