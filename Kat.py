@@ -42,7 +42,7 @@ class Kat:
     def __init__(self):
         # Initialise data
         self.title = "Kerry's Assessment Tracker"
-        self.version = "v1.0.1"
+        self.version = "v1.0.2"
         self.cells = {}
         self.rows = 0
         self.cols = 0
