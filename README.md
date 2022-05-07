@@ -10,13 +10,13 @@ Extract the ZIP file to a folder on your Windows PC and run Kat.exe.
 
 A simple screen with no data is presented when the application is started
 
-![](images\new.png) 
+![](images/new.png) 
 
 Replace "Title" with the title for the tracker being created.
 
-![add_row](images\add_row.png) adds a new row.
+![add_row](images/add_row.png) adds a new row.
 
-![add_col](images\add_col.png)adds a new column.
+![add_col](images/add_col.png)adds a new column.
 
 Rows are best used for assessment targets and columns for pupils. *However scroll bars have not yet been implemented so inverting this use may work better depending upon your requirements.*
 
@@ -24,11 +24,11 @@ Once rows and columns have been added, each row and column can be assigned a tit
 
 Each main cell can be cycled through the values 0 to 3 by clicking the button.
 
-![basic](images\basic.png) 
+![basic](images/basic.png) 
 
-![show_full](images\show_full.png) will show additional controls that allow rows and columns to be moved or deleted.
+![show_full](images/show_full.png) will show additional controls that allow rows and columns to be moved or deleted.
 
-![full](images\full.png) 
+![full](images/full.png) 
 
 Pressing the button again will hide the additional controls and return to the simpler view.
 
