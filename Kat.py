@@ -1,6 +1,8 @@
 ########################################################################
 #
-# Kerry's Assessment Tracker - A simple tool to track pupil progress.
+# Kerry's Assessment Tracker
+#
+# A tool to track pupil progress using a simple traffic light system.
 #
 # https://github.com/marjohloo/Kat
 #
@@ -40,7 +42,7 @@ class Kat:
     def __init__(self):
         # Initialise data
         self.title = "Kerry's Assessment Tracker"
-        self.version = "v1.0.0"
+        self.version = "v1.0.1"
         self.cells = {}
         self.rows = 0
         self.cols = 0
