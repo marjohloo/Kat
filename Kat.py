@@ -21,6 +21,7 @@ class Kat:
         self.cols = 0
         self.saved = False
         self.filename = ""
+        self.view_full = True
         # Invalidate outer frame
         self.frame_table = None
         # Initialise window
@@ -112,20 +113,24 @@ class Kat:
         self.cell_data_style(cell)
 
     def cell_create_col(self, cell, value):
-        #cell["frame"].configure(bootstyle="info")
-        if False:
-            cell["button_left_col"] = ttk.Button(cell["frame"], text="˂", command=self.button_left_col, bootstyle="info")
-            cell["button_left_col"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=0, pady=0)
-            cell["button_delete_col"] = ttk.Button(cell["frame"], text="X", command=self.button_delete_col, bootstyle="danger")
-            cell["button_delete_col"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=0, pady=0)
-            cell["button_right_col"] = ttk.Button(cell["frame"], text="˃", command=self.button_right_col, bootstyle="info")
-            cell["button_right_col"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["button_col_left"] = ttk.Button(cell["frame"], text="˂", command=lambda *_, cell=cell: self.button_col_left(cell), bootstyle="info-outline")
+        cell["button_col_left"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=(0,1), pady=(0,1))
+        cell["button_col_delete"] = ttk.Button(cell["frame"], text="×", command=lambda *_, cell=cell: self.button_col_delete(cell), bootstyle="danger-outline")
+        cell["button_col_delete"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=(0,1), pady=(0,1))
+        cell["button_col_right"] = ttk.Button(cell["frame"], text="˃", command=lambda *_, cell=cell: self.button_col_right(cell), bootstyle="info-outline")
+        cell["button_col_right"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=(0,1))
         cell["var"] = ttk.StringVar(value=value)
         cell["entry"] = ttk.Entry(cell["frame"], width=14, textvariable=cell["var"], bootstyle="info")
-        cell["entry"].grid(row=0, column=3, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["entry"].grid(row=1, column=0, columnspan=3, sticky=(N, W, S, E), padx=0, pady=0)
         cell["frame"].columnconfigure(3, weight=1)
 
     def cell_create_row(self, cell, value):
+        cell["button_row_up"] = ttk.Button(cell["frame"], text="˄", command=lambda *_, cell=cell: self.button_row_up(cell), bootstyle="primary-outline")
+        cell["button_row_up"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=(0,1), pady=0)
+        cell["button_row_delete"] = ttk.Button(cell["frame"], text="×", command=lambda *_, cell=cell: self.button_row_delete(cell), bootstyle="danger-outline")
+        cell["button_row_delete"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=(0,1), pady=0)
+        cell["button_row_down"] = ttk.Button(cell["frame"], text="˅", command=lambda *_, cell=cell: self.button_row_down(cell), bootstyle="primary-outline")
+        cell["button_row_down"].grid(row=0, column=2, sticky=(N, W, S, E), padx=(0,1), pady=0)
         cell["var"] = ttk.StringVar(value=value)
         cell["entry"] = ttk.Entry(cell["frame"], width=28, textvariable=cell["var"], bootstyle="primary")
         cell["entry"].grid(row=0, column=3, sticky=(N, W, S, E), padx=0, pady=0)
@@ -134,11 +139,12 @@ class Kat:
     def cell_create_origin(self, cell, value):
         cell["var"] = ttk.StringVar(value=value)
         cell["button_add_row"] = ttk.Button(cell["frame"], text="˅", command=self.button_add_row, bootstyle="primary")
-        cell["button_add_row"].grid(row=0, column=0, sticky=(N, W, S, E), padx=1, pady=1)
+        cell["button_add_row"].grid(row=0, column=0, sticky=(S, W), padx=(0,1), pady=0)
         cell["frame"].columnconfigure(0, weight=1)
         cell["button_add_col"] = ttk.Button(cell["frame"], text="˃", command=self.button_add_col, bootstyle="info")
-        cell["button_add_col"].grid(row=0, column=1, sticky=(N, W, S, E), padx=1, pady=1)
+        cell["button_add_col"].grid(row=0, column=1, sticky=(S, E), padx=0, pady=0)
         cell["frame"].columnconfigure(1, weight=1)
+        cell["frame"].rowconfigure(0, weight=1)
 
     def cell_value(self, row, col):
         value = "-"
@@ -190,6 +196,63 @@ class Kat:
             cell_html += '/td'
         cell_html += '>'
         return cell_html
+
+    def cell_swap(self, row_a, col_a, row_b, col_b):
+        if row_a < self.rows and row_b < self.rows and col_a < self.cols and col_b < self.cols:
+            if row_a != row_b or col_a != col_b:
+                cell_key_a = self.cell_key(row_a, col_a)
+                cell_key_b = self.cell_key(row_b, col_b)
+                if cell_key_a in self.cells and cell_key_b in self.cells:
+                    cell_a = self.cells.pop(cell_key_a)
+                    cell_b = self.cells.pop(cell_key_b)
+                    cell_a["row"] = row_b
+                    cell_a["col"] = col_b
+                    cell_b["row"] = row_a
+                    cell_b["col"] = col_a
+                    cell_a["key"] = cell_key_b
+                    cell_b["key"] = cell_key_a
+                    self.cells[cell_key_b] = cell_a
+                    self.cells[cell_key_a] = cell_b
+
+    def cell_move(self, row_a, col_a, row_b, col_b): # a to b
+        if row_a < self.rows and row_b < self.rows and col_a < self.cols and col_b < self.cols:
+            if row_a != row_b or col_a != col_b:
+                cell_key_a = self.cell_key(row_a, col_a)
+                cell_key_b = self.cell_key(row_b, col_b)
+                if cell_key_a in self.cells:
+                    cell_a = self.cells.pop(cell_key_a)
+                    cell_a["row"] = row_b
+                    cell_a["col"] = col_b
+                    cell_a["key"] = cell_key_b
+                    self.cells[cell_key_b] = cell_a
+                    print(f'cell_move({row_a}, {col_a}, {row_b}, {col_b})')
+
+    def cell_destroy(self, row, col):
+        if row < self.rows and col < self.cols:
+            cell_key = self.cell_key(row, col)
+            if cell_key in self.cells:
+                cell = self.cells[cell_key]
+                if cell["type"] == "data":
+                    cell["button"].destroy()
+                    cell["frame"].destroy()
+                    self.cells.pop(cell_key)
+                    print(f'cell_destroy({row}, {col}) - data')
+                elif cell["type"] == "row":
+                    cell["button_row_up"].destroy()
+                    cell["button_row_delete"].destroy()
+                    cell["button_row_down"].destroy()
+                    cell["entry"].destroy()
+                    cell["frame"].destroy()
+                    self.cells.pop(cell_key)
+                    print(f'cell_destroy({row}, {col}) - row')
+                elif cell["type"] == "col":
+                    cell["button_col_left"].destroy()
+                    cell["button_col_delete"].destroy()
+                    cell["button_col_right"].destroy()
+                    cell["entry"].destroy()
+                    cell["frame"].destroy()
+                    self.cells.pop(cell_key)
+                    print(f'cell_destroy({row}, {col}) - row')
 
     def cells_grid(self):
         for row in range(self.rows):
@@ -497,23 +560,59 @@ class Kat:
         cell["var"].set(cell_value)
         self.cell_data_style(cell)
 
-    def button_up_row(self):
-        pass
+    def button_row_up(self, cell):
+        row_a = cell["row"]
+        if row_a > 1:
+            row_b = row_a - 1
+            for col in range(self.cols):
+                self.cell_swap(row_a, col, row_b, col)
+            self.cells_grid()
 
-    def button_down_row(self):
-        pass
+    def button_row_down(self, cell):
+        row_a = cell["row"]
+        if row_a < self.rows - 1:
+            row_b = row_a + 1
+            for col in range(self.cols):
+                self.cell_swap(row_a, col, row_b, col)
+            self.cells_grid()
 
-    def button_left_col(self):
-        pass
+    def button_col_left(self, cell):
+        col_a = cell["col"]
+        if col_a > 1:
+            col_b = col_a - 1
+            for row in range(self.rows):
+                self.cell_swap(row, col_a, row, col_b)
+            self.cells_grid()
 
-    def button_right_col(self):
-        pass
+    def button_col_right(self, cell):
+        col_a = cell["col"]
+        if col_a < self.cols - 1:
+            col_b = col_a + 1
+            for row in range(self.rows):
+                self.cell_swap(row, col_a, row, col_b)
+            self.cells_grid()
 
-    def button_delete_row(self):
-        pass
+    def button_row_delete(self, cell):
+        row_del = cell["row"]
+        if row_del > 0 and row_del < self.rows:
+            for col in range(self.cols):
+                self.cell_destroy(row_del, col)
+            for row in range(row_del+1, self.rows):
+                for col in range(self.cols):
+                    self.cell_move(row, col, row-1, col)
+            self.rows -= 1
+            self.cells_grid()
 
-    def button_delete_col(self):
-        pass
+    def button_col_delete(self, cell):
+        col_del = cell["col"]
+        if col_del > 0 and col_del < self.cols:
+            for row in range(self.rows):
+                self.cell_destroy(row, col_del)
+            for col in range(col_del+1, self.cols):
+                for row in range(self.rows):
+                    self.cell_move(row, col, row, col-1)
+            self.cols -= 1
+            self.cells_grid()
 
     def var_write(self):
         self.saved = False

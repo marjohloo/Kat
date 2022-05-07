@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Title</title>
+    <style>
+        body              { font-size: 10pt; font-family: Calibri,Arial,Helvetica,sans-serif; }
+        div               { page-break-inside: avoid; }
+        p                 { font-size: 10pt; }
+        h1                { font-size: 16pt; font-weight: bold; }
+        h2                { font-size: 12pt; font-weight: bold; /* page-break-before: always; */ }
+        table, tr, th, td { font-size: 10pt; text-align: center; vertical-align: top; border: 1px solid black; border-collapse: collapse; padding: 2pt}
+        .page             { page-break-before: always; }
+        .left             { text-align: left; }
+        .primary          { background: #4582ec; }
+        .secondary        { background: #adb5bd; }
+        .success          { background: #02b875; }
+        .warning          { background: #f0ad4e; }
+        .primary          { background: #4582ec; }
+        .danger           { background: #d9534f; }
+        .info             { background: #17a2b8; }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Title</h1>
+      <table id="KAT" width="100%">
+        <tr>
+          <th class="left"></th>
+          <th width="16%">COL 1</th>
+          <th width="16%">COL 2</th>
+          <th width="16%">COL 4</th>
+          <th width="16%">COL 5</th>
+        </tr>
+        <tr>
+          <td class="left">ROW 1</td>
+          <td class="danger">1</td>
+          <td class="danger">1</td>
+          <td class="danger">1</td>
+          <td class="danger">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 2</td>
+          <td class="warning">2</td>
+          <td class="success">3</td>
+          <td class="warning">2</td>
+          <td class="danger">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 4</td>
+          <td class="success">3</td>
+          <td class="secondary">0</td>
+          <td class="success">3</td>
+          <td class="danger">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 5</td>
+          <td class="secondary">0</td>
+          <td class="secondary">0</td>
+          <td class="secondary">0</td>
+          <td class="danger">1</td>
+        </tr>
+      </table>
+    </div>
+    <div class="page">
+      <h2>Title: COL 1</h2>
+      <table width="100%">
+        <tr>
+          <td class="left">ROW 1</td>
+          <td class="danger" width="16%">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 2</td>
+          <td class="warning">2</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 4</td>
+          <td class="success">3</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 5</td>
+          <td class="secondary">0</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h2>Title: COL 2</h2>
+      <table width="100%">
+        <tr>
+          <td class="left">ROW 1</td>
+          <td class="danger" width="16%">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 2</td>
+          <td class="success">3</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 4</td>
+          <td class="secondary">0</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 5</td>
+          <td class="secondary">0</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h2>Title: COL 4</h2>
+      <table width="100%">
+        <tr>
+          <td class="left">ROW 1</td>
+          <td class="danger" width="16%">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 2</td>
+          <td class="warning">2</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 4</td>
+          <td class="success">3</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 5</td>
+          <td class="secondary">0</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h2>Title: COL 5</h2>
+      <table width="100%">
+        <tr>
+          <td class="left">ROW 1</td>
+          <td class="danger" width="16%">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 2</td>
+          <td class="danger">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 4</td>
+          <td class="danger">1</td>
+        </tr>
+        <tr>
+          <td class="left">ROW 5</td>
+          <td class="danger">1</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
