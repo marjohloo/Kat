@@ -16,7 +16,7 @@ Replace "Title" with the title for the tracker being created.
 
 ![add_row](images/add_row.png) adds a new row.
 
-![add_col](images/add_col.png)adds a new column.
+![add_col](images/add_col.png) adds a new column.
 
 Rows are best used for assessment targets and columns for pupils. *However scroll bars have not yet been implemented so inverting this use may work better depending upon your requirements.*
 
