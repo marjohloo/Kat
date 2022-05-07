@@ -1,4 +1,4 @@
-# Kerry's Assessment Tracker
+# [Kerry's Assessment Tracker](https://github.com/marjohloo/Kat)
 
 This is a tool written to track pupil progress using a simple traffic light system.
 
