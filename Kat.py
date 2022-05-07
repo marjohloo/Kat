@@ -1,3 +1,20 @@
+###############################################################################
+# Copyright 2022 Martin Looker                                                #
+#                                                                             #
+# This program is free software: you can redistribute it and/or modify it     #
+# under the terms of the GNU General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)   #
+# any later version.                                                          #
+#                                                                             #
+# This program is distributed in the hope that it will be useful, but WITHOUT #
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or       #
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for    #
+# more details.                                                               #
+#                                                                             #
+# You should have received a copy of the GNU General Public License along     #
+# with this program. If not, see <https://www.gnu.org/licenses/>.             #
+###############################################################################
+
 # Package imports
 import json
 import os
@@ -113,23 +130,25 @@ class Kat:
         self.cell_data_style(cell)
 
     def cell_create_col(self, cell, value):
-        cell["button_col_left"] = ttk.Button(cell["frame"], text="˂", command=lambda *_, cell=cell: self.button_col_left(cell), bootstyle="info-outline")
+        cell["button_col_left"] = ttk.Button(cell["frame"], text="˂", command=lambda *_, cell=cell: self.button_col_left(cell), bootstyle="info")
         cell["button_col_left"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=(0,1), pady=(0,1))
-        cell["button_col_delete"] = ttk.Button(cell["frame"], text="×", command=lambda *_, cell=cell: self.button_col_delete(cell), bootstyle="danger-outline")
+        cell["button_col_delete"] = ttk.Button(cell["frame"], text="×", command=lambda *_, cell=cell: self.button_col_delete(cell), bootstyle="danger")
         cell["button_col_delete"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=(0,1), pady=(0,1))
-        cell["button_col_right"] = ttk.Button(cell["frame"], text="˃", command=lambda *_, cell=cell: self.button_col_right(cell), bootstyle="info-outline")
+        cell["button_col_right"] = ttk.Button(cell["frame"], text="˃", command=lambda *_, cell=cell: self.button_col_right(cell), bootstyle="info")
         cell["button_col_right"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=(0,1))
         cell["var"] = ttk.StringVar(value=value)
         cell["entry"] = ttk.Entry(cell["frame"], width=14, textvariable=cell["var"], bootstyle="info")
         cell["entry"].grid(row=1, column=0, columnspan=3, sticky=(N, W, S, E), padx=0, pady=0)
-        cell["frame"].columnconfigure(3, weight=1)
+        cell["frame"].columnconfigure(0, weight=1)
+        cell["frame"].columnconfigure(1, weight=1)
+        cell["frame"].columnconfigure(2, weight=1)
 
     def cell_create_row(self, cell, value):
-        cell["button_row_up"] = ttk.Button(cell["frame"], text="˄", command=lambda *_, cell=cell: self.button_row_up(cell), bootstyle="primary-outline")
+        cell["button_row_up"] = ttk.Button(cell["frame"], text="˄", command=lambda *_, cell=cell: self.button_row_up(cell), bootstyle="primary")
         cell["button_row_up"].grid(row= 0, column=0, sticky=(N, W, S, E), padx=(0,1), pady=0)
-        cell["button_row_delete"] = ttk.Button(cell["frame"], text="×", command=lambda *_, cell=cell: self.button_row_delete(cell), bootstyle="danger-outline")
+        cell["button_row_delete"] = ttk.Button(cell["frame"], text="×", command=lambda *_, cell=cell: self.button_row_delete(cell), bootstyle="danger")
         cell["button_row_delete"].grid(row= 0, column=1, sticky=(N, W, S, E), padx=(0,1), pady=0)
-        cell["button_row_down"] = ttk.Button(cell["frame"], text="˅", command=lambda *_, cell=cell: self.button_row_down(cell), bootstyle="primary-outline")
+        cell["button_row_down"] = ttk.Button(cell["frame"], text="˅", command=lambda *_, cell=cell: self.button_row_down(cell), bootstyle="primary")
         cell["button_row_down"].grid(row=0, column=2, sticky=(N, W, S, E), padx=(0,1), pady=0)
         cell["var"] = ttk.StringVar(value=value)
         cell["entry"] = ttk.Entry(cell["frame"], width=28, textvariable=cell["var"], bootstyle="primary")
@@ -137,13 +156,16 @@ class Kat:
         cell["frame"].columnconfigure(3, weight=1)
 
     def cell_create_origin(self, cell, value):
-        cell["var"] = ttk.StringVar(value=value)
+        cell["var"] = ttk.IntVar(value=0)
         cell["button_add_row"] = ttk.Button(cell["frame"], text="˅", command=self.button_add_row, bootstyle="primary")
-        cell["button_add_row"].grid(row=0, column=0, sticky=(S, W), padx=(0,1), pady=0)
+        cell["button_add_row"].grid(row=0, column=0, sticky=(N, W, S, E), padx=(0,1), pady=0)
         cell["frame"].columnconfigure(0, weight=1)
-        cell["button_add_col"] = ttk.Button(cell["frame"], text="˃", command=self.button_add_col, bootstyle="info")
-        cell["button_add_col"].grid(row=0, column=1, sticky=(S, E), padx=0, pady=0)
+        cell["button_toggle"] = ttk.Checkbutton(cell["frame"], text="*", command=lambda *_, cell=cell: self.checkbutton_toggle(cell), variable=cell["var"], bootstyle="success-outline-toolbutton")
+        cell["button_toggle"].grid(row=0, column=1, sticky=(N, W, S, E), padx=(0,1), pady=0)
         cell["frame"].columnconfigure(1, weight=1)
+        cell["button_add_col"] = ttk.Button(cell["frame"], text="˃", command=self.button_add_col, bootstyle="info")
+        cell["button_add_col"].grid(row=0, column=2, sticky=(N, W, S, E), padx=0, pady=0)
+        cell["frame"].columnconfigure(2, weight=1)
         cell["frame"].rowconfigure(0, weight=1)
 
     def cell_value(self, row, col):
@@ -255,6 +277,13 @@ class Kat:
                     print(f'cell_destroy({row}, {col}) - row')
 
     def cells_grid(self):
+        full = True
+        origin_key = self.cell_key(0, 0)
+        if origin_key in self.cells:
+            if self.cells[origin_key]["var"].get():
+                full = True
+            else:
+                full = False
         for row in range(self.rows):
             for col in range(self.cols):
                 if row == 0:
@@ -266,6 +295,43 @@ class Kat:
                 if cell_key in self.cells:
                     cell = self.cells[cell_key]
                     cell["frame"].grid(row=row, column=col, sticky=(N, W, S, E), padx=1, pady=1)
+                    if cell["type"] == "row":
+                        if full:
+                            cell["button_row_up"].configure(state="normal")
+                            cell["button_row_down"].configure(state="normal")
+
+                            if cell["row"] == 1:
+                                cell["button_row_up"].configure(state="disabled")
+                            if cell["row"] == self.rows - 1:
+                                cell["button_row_down"].configure(state="disabled")
+
+                            cell["button_row_up"].grid()
+                            cell["button_row_delete"].grid()
+                            cell["button_row_down"].grid()
+                        else:
+                            cell["button_row_up"].grid_remove()
+                            cell["button_row_delete"].grid_remove()
+                            cell["button_row_down"].grid_remove()
+                    elif cell["type"] == "col":
+                        if full:
+                            cell["button_col_left"].configure(state="normal")
+                            cell["button_col_right"].configure(state="normal")
+
+                            if cell["col"] == 1:
+                                cell["button_col_left"].configure(state="disabled")
+                            if cell["col"] == self.cols - 1:
+                                cell["button_col_right"].configure(state="disabled")
+
+                            cell["button_col_left"].grid()
+                            cell["button_col_delete"].grid()
+                            cell["button_col_right"].grid()
+                        else:
+                            cell["button_col_left"].grid_remove()
+                            cell["button_col_delete"].grid_remove()
+                            cell["button_col_right"].grid_remove()
+
+
+
 
     def file_new(self):
         self.var_title.set("Title")
@@ -551,6 +617,10 @@ class Kat:
         self.cols += 1
         self.cells_grid()
         self.saved = False
+
+    def checkbutton_toggle(self, cell):
+        print(f'checkbutton_toggle()={cell["var"].get()}')
+        self.cells_grid()
 
     def button_data(self, cell):
         cell_value = cell["var"].get()
