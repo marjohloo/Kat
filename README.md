@@ -10,7 +10,7 @@ Extract the ZIP file to a folder on your Windows PC and run Kat.exe.
 
 A simple screen with no data is presented when the application is started
 
-![](images\new.png).
+![](images\new.png) 
 
 Replace "Title" with the title for the tracker being created.
 
@@ -18,17 +18,17 @@ Replace "Title" with the title for the tracker being created.
 
 ![add_col](images\add_col.png)adds a new column.
 
-Rows are best used for assessment targets and columns for pupils. However scroll bars have not yet been implemented so inverting this use may work better depending upon your requirements.
+Rows are best used for assessment targets and columns for pupils. *However scroll bars have not yet been implemented so inverting this use may work better depending upon your requirements.*
 
 Once rows and columns have been added, each row and column can be assigned a title by typing in the entry box.
 
 Each main cell can be cycled through the values 0 to 3 by clicking the button.
 
-![basic](images\basic.png).
+![basic](images\basic.png) 
 
 ![show_full](images\show_full.png) will show additional controls that allow rows and columns to be moved or deleted.
 
-![full](images\full.png).
+![full](images\full.png) 
 
 Pressing the button again will hide the additional controls and return to the simpler view.
 
@@ -39,6 +39,7 @@ The File menu provides the following functions:
 * **Save:** saves the current data to an already opened file
 * **Save As:** allows the current data to be saved to a different or new file
 * **View HTML:** opens the saved file in the default browser for viewing and/or printing
+* **View Manual:** opens this manual for viewing
 
 ### HTML Files
 
@@ -48,7 +49,7 @@ The HTML file includes the full data table as displayed in KAT, it also includes
 
 # Notices
 
-Kerry's Assessment Tracker - A simple tool to track pupil progress.
+**Kerry's Assessment Tracker - A simple tool to track pupil progress.**
 
 https://github.com/marjohloo/Kat
 

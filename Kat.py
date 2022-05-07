@@ -64,6 +64,8 @@ class Kat:
         self.menufile.add_command(label="Save",               accelerator="Ctrl+S",       command=self.menu_file_save)
         self.menufile.add_command(label="Save As...",         accelerator="Ctrl+Shift+S", command=self.menu_file_save_as)
         self.menufile.add_command(label="View HTML...",       accelerator="Ctrl+H",       command=self.menu_file_view_html)
+        self.menufile.add_separator()
+        self.menufile.add_command(label="View Manual...",     accelerator="Ctrl+M",       command=self.menu_file_view_manual)
         self.menufile.entryconfigure("View HTML...", state=DISABLED)
         self.window["menu"] = self.menubar
         # Bind key presses to match menu
@@ -72,6 +74,7 @@ class Kat:
         self.window.bind("<Control-s>", lambda *_: self.menu_file_save())
         self.window.bind("<Control-S>", lambda *_: self.menu_file_save_as())
         self.window.bind("<Control-W>", lambda *_: self.menu_file_view_html())
+        self.window.bind("<Control-M>", lambda *_: self.menu_file_view_manual())
         # Create upper frame
         self.frame_upper = ttk.Frame(self.window)
         self.frame_upper.grid(row=0, column=0, sticky=(N, W, S, E))
@@ -601,6 +604,9 @@ class Kat:
 
     def menu_file_view_html(self):
         self.file_view_html()
+
+    def menu_file_view_manual(self):
+        os.startfile('Kat.pdf', 'open')
 
     def button_add_row(self):
         row = self.rows
