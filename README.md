@@ -1,4 +1,4 @@
-# [Kerry's Assessment Tracker](https://github.com/marjohloo/Kat)
+# Kerry's Assessment Tracker
 
 This is a tool written to track pupil progress using a simple traffic light system.
 
@@ -47,6 +47,10 @@ Files are saved as standard HTML files as used on the internet. The main data ta
 The HTML file includes the full data table as displayed in KAT, it also includes a per-column table allowing printed output to be placed in pupil's books, When printing a page-break is inserted between the full data table and the per-column tables.
 
 # Notices
+
+Kerry's Assessment Tracker - A simple tool to track pupil progress.
+
+https://github.com/marjohloo/Kat
 
 Copyright Martin Looker 2022
 
