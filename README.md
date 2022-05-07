@@ -1,4 +1,4 @@
-# Kerry's Assessment Tracker
+# Kerry's Assessment Tracker v1.0.0
 
 This is a tool written to track pupil progress using a simple traffic light system.
 
@@ -10,7 +10,7 @@ Extract the ZIP file to a folder on your Windows PC and run Kat.exe.
 
 A simple screen with no data is presented when the application is started
 
-![](images/new.png) 
+![](images/new.png)
 
 Replace "Title" with the title for the tracker being created.
 
@@ -24,11 +24,11 @@ Once rows and columns have been added, each row and column can be assigned a tit
 
 Each main cell can be cycled through the values 0 to 3 by clicking the button.
 
-![basic](images/basic.png) 
+![basic](images/basic.png)
 
 ![show_full](images/show_full.png) will show additional controls that allow rows and columns to be moved or deleted.
 
-![full](images/full.png) 
+![full](images/full.png)
 
 Pressing the button again will hide the additional controls and return to the simpler view.
 
@@ -40,6 +40,7 @@ The File menu provides the following functions:
 * **Save As:** allows the current data to be saved to a different or new file
 * **View HTML:** opens the saved file in the default browser for viewing and/or printing
 * **View Manual:** opens this manual for viewing
+* **View Homepage:** opens the project's homepage on GitHub (releases are available on the right side of the homepage)
 
 ### HTML Files
 

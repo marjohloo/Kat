@@ -24,6 +24,7 @@
 # Package imports
 import json
 import os
+import webbrowser
 from   tkinter import filedialog
 
 # https://ttkbootstrap.readthedocs.io/en/latest/
@@ -39,6 +40,7 @@ class Kat:
     def __init__(self):
         # Initialise data
         self.title = "Kerry's Assessment Tracker"
+        self.version = "v1.0.0"
         self.cells = {}
         self.rows = 0
         self.cols = 0
@@ -49,7 +51,7 @@ class Kat:
         self.frame_table = None
         # Initialise window
         self.window = ttk.Window()
-        self.window.title(self.title)
+        self.window.title(f'{self.title} - {self.version}')
         self.window.columnconfigure(0, weight=1)
         # Extract colors from window theme
         self.colors = self.window.style.colors
@@ -65,7 +67,8 @@ class Kat:
         self.menufile.add_command(label="Save As...",         accelerator="Ctrl+Shift+S", command=self.menu_file_save_as)
         self.menufile.add_command(label="View HTML...",       accelerator="Ctrl+H",       command=self.menu_file_view_html)
         self.menufile.add_separator()
-        self.menufile.add_command(label="View Manual...",     accelerator="Ctrl+M",       command=self.menu_file_view_manual)
+        self.menufile.add_command(label="View Manual...",     accelerator="F1",           command=self.menu_file_view_manual)
+        self.menufile.add_command(label="View Homepage...",   accelerator="Ctrl+G",       command=self.menu_file_view_homepage)
         self.menufile.entryconfigure("View HTML...", state=DISABLED)
         self.window["menu"] = self.menubar
         # Bind key presses to match menu
@@ -73,8 +76,9 @@ class Kat:
         self.window.bind("<Control-o>", lambda *_: self.menu_file_open())
         self.window.bind("<Control-s>", lambda *_: self.menu_file_save())
         self.window.bind("<Control-S>", lambda *_: self.menu_file_save_as())
-        self.window.bind("<Control-W>", lambda *_: self.menu_file_view_html())
-        self.window.bind("<Control-M>", lambda *_: self.menu_file_view_manual())
+        self.window.bind("<Control-h>", lambda *_: self.menu_file_view_html())
+        self.window.bind("<F1>",        lambda *_: self.menu_file_view_manual())
+        self.window.bind("<Control-g>", lambda *_: self.menu_file_view_homepage())
         # Create upper frame
         self.frame_upper = ttk.Frame(self.window)
         self.frame_upper.grid(row=0, column=0, sticky=(N, W, S, E))
@@ -83,7 +87,7 @@ class Kat:
         #self.label_title.grid(row=0, column=0, sticky=(N, W, S, E), padx=1, pady=1)
         self.var_title = ttk.StringVar(value="Title")
         self.var_title.trace_add("write", lambda *_: self.var_write())
-        self.entry_title = ttk.Entry(self.frame_upper, textvariable=self.var_title, width=48, bootstyle="dark")
+        self.entry_title = ttk.Entry(self.frame_upper, textvariable=self.var_title, width=64, bootstyle="dark")
         self.entry_title.grid(row=0, column=1, sticky=(N, W, S, E), padx=1, pady=(1, 5))
         #self.separator_title = ttk.Separator(self.frame_upper, bootstyle="dark")
         #self.separator_title.grid(row=1, column=1, sticky=(N, W, S, E), padx=1, pady=1)
@@ -98,10 +102,10 @@ class Kat:
         self.filename = filename
         # Got a filename ?
         if len(self.filename):
-            self.window.title(f'{self.title}: {os.path.basename(self.filename)}')
+            self.window.title(f'{self.title} - {os.path.basename(self.filename)}')
             self.menufile.entryconfigure("View HTML...", state=NORMAL)
         else:
-            self.window.title(f'{self.title}')
+            self.window.title(f'{self.title} - {self.version}')
             self.menufile.entryconfigure("View HTML...", state=DISABLED)
 
     def cell_key(self, row, col):
@@ -607,6 +611,9 @@ class Kat:
 
     def menu_file_view_manual(self):
         os.startfile('Kat.pdf', 'open')
+
+    def menu_file_view_homepage(self):
+        webbrowser.open('https://github.com/marjohloo/Kat')
 
     def button_add_row(self):
         row = self.rows
