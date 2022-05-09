@@ -53,6 +53,7 @@ class Kat:
         self.frame_table = None
         # Initialise window
         self.window = ttk.Window()
+        self.window.resizable(FALSE,FALSE)
         self.window.title(f'{self.title} - {self.version}')
         self.window.columnconfigure(0, weight=1)
         # Extract colors from window theme
