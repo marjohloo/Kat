@@ -1,4 +1,4 @@
-# Kerry's Assessment Tracker v1.0.2
+# Kerry's Assessment Tracker v1.0.3
 
 A tool to track pupil progress using a simple traffic light system.
 
@@ -10,7 +10,7 @@ Extract the ZIP file to a folder on your Windows PC and run Kat.exe.
 
 A simple screen with no data is presented when the application is started
 
-![](images/new.png) 
+![new](images/new.png) 
 
 Replace "Title" with the title for the tracker being created.
 
