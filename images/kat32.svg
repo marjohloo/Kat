@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666664 8.4666669"
+   version="1.1"
+   id="svg12"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="kat32.svg"
+   inkscape:export-filename="C:\Users\Martin\Documents\GitHub\Python\Kat\kat32.png"
+   inkscape:export-xdpi="96.000008"
+   inkscape:export-ydpi="96.000008"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="24.886869"
+     inkscape:cx="-5.0428201"
+     inkscape:cy="12.918459"
+     inkscape:window-width="3440"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     width="32px" />
+  <defs
+     id="defs9" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#d9534f;fill-opacity:1;fill-rule:evenodd;stroke-width:0.580964"
+       id="rect38"
+       width="7.9375"
+       height="2.3812499"
+       x="0.26458332"
+       y="0.26458332"
+       rx="0.52916664"
+       ry="0.59531248" />
+    <rect
+       style="fill:#f0ad4e;fill-opacity:1;fill-rule:evenodd;stroke-width:0.547739"
+       id="rect38-4"
+       width="7.9375"
+       height="2.1166666"
+       x="0.26458332"
+       y="3.175"
+       rx="0.52916664"
+       ry="0.52916664" />
+    <rect
+       style="fill:#02b875;fill-opacity:1;fill-rule:evenodd;stroke-width:0.580946"
+       id="rect38-4-6"
+       width="7.9375"
+       height="2.3812499"
+       x="0.26458332"
+       y="5.8208332"
+       rx="0.52913332"
+       ry="0.59531248" />
+  </g>
+</svg>

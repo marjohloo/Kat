@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733334 67.733336"
+   version="1.1"
+   id="svg12"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="kat256.svg"
+   inkscape:export-filename="C:\Users\Martin\Documents\GitHub\Python\Kat\images\kat256.png"
+   inkscape:export-xdpi="96.000008"
+   inkscape:export-ydpi="96.000008"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="3.7137136"
+     inkscape:cx="63.952158"
+     inkscape:cy="108.65135"
+     inkscape:window-width="3440"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     width="128px" />
+  <defs
+     id="defs9" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect38"
+       style="fill:#d9534f;fill-opacity:1;fill-rule:evenodd;stroke-width:3.26098"
+       d="m 3.740661,0.26458333 c -1.925747,0 -3.47607767,1.64511707 -3.47607767,3.68860327 V 17.478065 c 0,2.043486 1.55033067,3.688602 3.47607767,3.688602 h 60.252008 c 1.925754,0 3.476081,-1.645116 3.476081,-3.688602 V 3.9531866 c 0,-2.0434862 -1.550327,-3.68860327 -3.476081,-3.68860327 z" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25.4px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="26.25783"
+       y="18.739941"
+       id="text2898"><tspan
+         sodipodi:role="line"
+         id="tspan2896"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';stroke-width:0.264583"
+         x="26.25783"
+         y="18.739941">K</tspan></text>
+    <rect
+       style="fill:#f0ad4e;fill-opacity:1;fill-rule:evenodd;stroke-width:3.53296"
+       id="rect38-4"
+       width="67.20417"
+       height="21.166666"
+       x="0.26458335"
+       y="23.283333"
+       rx="2.1166666"
+       ry="2.1166666" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25.4px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="26.165119"
+       y="41.890984"
+       id="text2898-5"><tspan
+         sodipodi:role="line"
+         id="tspan2896-3"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';stroke-width:0.264583"
+         x="26.165119"
+         y="41.890984">A</tspan></text>
+    <rect
+       style="fill:#02b875;fill-opacity:1;fill-rule:evenodd;stroke-width:3.26088"
+       id="rect38-4-6"
+       width="67.20417"
+       height="20.902082"
+       x="0.26458332"
+       y="46.566666"
+       rx="2.1166666"
+       ry="2.1166666" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:25.4px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="27.57868"
+       y="65.004814"
+       id="text2898-5-7"><tspan
+         sodipodi:role="line"
+         id="tspan2896-3-3"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;font-family:Calibri;-inkscape-font-specification:'Calibri Bold';stroke-width:0.264583"
+         x="27.57868"
+         y="65.004814">T</tspan></text>
+  </g>
+</svg>

@@ -45,7 +45,7 @@ class Kat:
     def __init__(self):
         # Initialise data
         self.title = "Kerry's Assessment Tracker"
-        self.version = "v1.0.3"
+        self.version = "v1.0.4"
         self.cells = {}
         self.rows = 0
         self.cols = 0
@@ -58,6 +58,7 @@ class Kat:
         # Initialise window
         self.window = ttk.Window()
         self.window.resizable(FALSE,FALSE)
+        self.window.iconbitmap('Kat.ico')
         self.window.title(f'{self.title} - {self.version}')
         self.window.columnconfigure(0, weight=1)
         # Extract colors from window theme
