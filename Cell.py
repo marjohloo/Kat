@@ -23,14 +23,10 @@
 #
 ########################################################################
 
-# Package imports
-from   tkinter import filedialog
-
 # https://ttkbootstrap.readthedocs.io/en/latest/
 # python -m pip install ttkbootstrap
 import ttkbootstrap as ttk
 from   ttkbootstrap.constants import *
-from   ttkbootstrap.dialogs   import Messagebox
 
 # Project imports
 from Kat import *

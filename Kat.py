@@ -35,6 +35,11 @@ import ttkbootstrap as ttk
 from   ttkbootstrap.constants import *
 from   ttkbootstrap.dialogs   import Messagebox
 
+# https://xlsxwriter.readthedocs.io/getting_started.html
+# pip install XlsxWriter
+import xlsxwriter
+from   xlsxwriter.utility import xl_rowcol_to_cell
+
 # Project imports
 from Cell import *
 
@@ -45,7 +50,7 @@ class Kat:
     def __init__(self):
         # Initialise data
         self.title = "Kerry's Assessment Tracker"
-        self.version = "v1.0.4"
+        self.version = "v1.0.5"
         self.cells = {}
         self.rows = 0
         self.cols = 0
@@ -80,6 +85,9 @@ class Kat:
         self.menu.add_command(label="View HTML...", accelerator="Ctrl+H", command=self.menu_view_html)
         self.menu.entryconfigure("View HTML...", state=DISABLED)
         self.window.bind("<Control-h>", lambda *_: self.menu_view_html())
+        self.menu.add_command(label="View Excel...", accelerator="Ctrl+E", command=self.menu_view_excel)
+        self.menu.entryconfigure("View Excel...", state=DISABLED)
+        self.window.bind("<Control-e>", lambda *_: self.menu_view_excel())
         self.menu.add_separator()
         self.menu.add_command(label="View Manual...", accelerator="F1", command=self.menu_view_manual)
         self.window.bind("<F1>",        lambda *_: self.menu_view_manual())
@@ -140,6 +148,7 @@ class Kat:
         # Have a current filename ?
         else:
             self.file_write(self.filename)
+            self.file_write_excel(self.filename.replace(".html", ".xlsx"))
 
     def menu_save_as(self):
         filename = filedialog.asksaveasfilename(title            = "File > Save As",
@@ -148,9 +157,13 @@ class Kat:
                                                 parent           = self.window)
         if len(filename):
             self.file_write(filename)
+            self.file_write_excel(filename.replace(".html", ".xlsx"))
 
     def menu_view_html(self):
         self.file_view_html()
+
+    def menu_view_excel(self):
+        self.file_view_excel()
 
     def menu_view_manual(self):
         os.startfile('Kat.pdf', 'open')
@@ -378,16 +391,105 @@ class Kat:
                 # Data is saved
                 self.saved = True
 
+    def file_write_excel(self, filename):
+        if len(filename) > 0:
+            # Open file
+            with xlsxwriter.Workbook(filename) as w:
+                # Get widths from biggest row/column titles
+                width_row = 10
+                width_col = 10
+                for row in range(self.rows):
+                    if len(self.cell_value(row, 0)) > width_row:
+                        width_row = len(self.cell_value(row, 0))
+                for col in range(1,self.cols):
+                    if len(self.cell_value(0, col)) > width_col:
+                        width_col = len(self.cell_value(0, col))
+                # Set formats
+                format_normal    = w.add_format()
+                format_bold      = w.add_format({"bold" : 1})
+                format_primary   = w.add_format({"bg_color" : self.colors.get("primary")})
+                format_secondary = w.add_format({"bg_color" : self.colors.get("secondary")})
+                format_success   = w.add_format({"bg_color" : self.colors.get("success")})
+                format_warning   = w.add_format({"bg_color" : self.colors.get("warning")})
+                format_danger    = w.add_format({"bg_color" : self.colors.get("danger")})
+                format_info      = w.add_format({"bg_color" : self.colors.get("info")})
+                # Create worksheet
+                worksheet = w.add_worksheet(self.cell_value(0,0))
+                # Loop through cells
+                for row in range(self.rows):
+                    for col in range(self.cols):
+                        # Set cell data
+                        if row > 0 and col > 0:
+                            worksheet.write(row, col, int(self.cell_value(row, col)))
+                        else:
+                            worksheet.write(row, col, self.cell_value(row, col), format_bold)
+                # Set column widths
+                worksheet.set_column(0, 0,           width_row)
+                worksheet.set_column(1, self.cols-1, width_col)
+                # Set conditional formatting
+                worksheet.conditional_format(1, 1, self.rows-1, self.cols-1, {"type"     : "cell",
+                                                                              "criteria" : "==",
+                                                                              "value"    : 3,
+                                                                              "format"   : format_success})
+                worksheet.conditional_format(1, 1, self.rows-1, self.cols-1, {"type"     : "cell",
+                                                                              "criteria" : "==",
+                                                                              "value"    : 2,
+                                                                              "format"   : format_warning})
+                worksheet.conditional_format(1, 1, self.rows-1, self.cols-1, {"type"     : "cell",
+                                                                              "criteria" : "==",
+                                                                              "value"    : 1,
+                                                                              "format"   : format_danger})
+                worksheet.conditional_format(1, 1, self.rows-1, self.cols-1, {"type"     : "cell",
+                                                                              "criteria" : "==",
+                                                                              "value"    : 0,
+                                                                              "format"   : format_secondary})
+                # Output individual data
+                for col in range(1, self.cols):
+                    # Create worksheet
+                    worksheet = w.add_worksheet(self.cell_value(0,col))
+                    for row in range(self.rows):
+                        # Build reference to row title in main worksheet
+                        xl_cell_ref = f"='{self.cell_value(0, 0)}'!{xl_rowcol_to_cell(row, 0)}"
+                        worksheet.write(row, 0, xl_cell_ref, format_bold)
+                        # Build reference to data in main worksheet
+                        xl_cell_ref = f"='{self.cell_value(0, 0)}'!{xl_rowcol_to_cell(row, col)}"
+                        if row > 0:
+                            worksheet.write(row, 1, xl_cell_ref)
+                        else:
+                            worksheet.write(row, 1, xl_cell_ref, format_bold)
+                        # Set column widths
+                        worksheet.set_column(0, 0, width_row)
+                        worksheet.set_column(1, 1, width_col)
+                        # Set conditional formatting
+                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                                                                            "criteria" : "==",
+                                                                            "value"    : 3,
+                                                                            "format"   : format_success})
+                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                                                                            "criteria" : "==",
+                                                                            "value"    : 2,
+                                                                            "format"   : format_warning})
+                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                                                                            "criteria" : "==",
+                                                                            "value"    : 1,
+                                                                            "format"   : format_danger})
+                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                                                                            "criteria" : "==",
+                                                                            "value"    : 0,
+                                                                            "format"   : format_secondary})
+
     def filename_set(self, filename):
         # Retain filename
         self.filename = filename
         # Got a filename ?
         if len(self.filename):
             self.window.title(f'{self.title} - {os.path.basename(self.filename)}')
-            self.menu.entryconfigure("View HTML...", state=NORMAL)
+            self.menu.entryconfigure("View HTML...",  state=NORMAL)
+            self.menu.entryconfigure("View Excel...", state=NORMAL)
         else:
             self.window.title(f'{self.title} - {self.version}')
-            self.menu.entryconfigure("View HTML...", state=DISABLED)
+            self.menu.entryconfigure("View HTML...",  state=DISABLED)
+            self.menu.entryconfigure("View Excel...", state=DISABLED)
 
     def view_toggle(self):
         if self.view == "min":
@@ -503,6 +605,11 @@ class Kat:
         if self.filename != "":
             # Open file in browser
             os.startfile(self.filename, 'open')
+
+    def file_view_excel(self):
+        if self.filename != "":
+            # Open file in browser
+            os.startfile(self.filename.replace(".html", ".xlsx"), 'open')
 
 if __name__ == '__main__':
     kat = Kat()

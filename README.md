@@ -1,4 +1,4 @@
-# Kerry's Assessment Tracker v1.0.4
+# Kerry's Assessment Tracker v1.0.5
 
 A tool to track pupil progress using a simple traffic light system.
 
@@ -39,6 +39,7 @@ The File menu provides the following functions:
 * **Save:** saves the current data to an already opened file
 * **Save As:** allows the current data to be saved to a different or new file
 * **View HTML:** opens the saved file in the default browser for viewing and/or printing
+* **View Excel:** opens the saved file in the default browser for viewing and/or printing
 * **View Manual:** opens this manual for viewing
 * **View Homepage:** opens the project's homepage on GitHub (releases are available on the right side of the homepage)
 
@@ -46,7 +47,15 @@ The File menu provides the following functions:
 
 Files are saved as standard HTML files as used on the internet. The main data table in the document is specially marked so the data can be re-loaded when the file is opened in the KAT application.
 
-The HTML file includes the full data table as displayed in KAT, it also includes a per-column table allowing printed output to be placed in pupil's books. When printing a page-break is inserted between the full data table and the per-column tables, the printed output attempts to not split tables across pages. To include the cell colours in a print out it may be necessary to enable background colours in your browser's print settings
+The HTML file includes the full data table as displayed in KAT, it also includes a per-column table allowing printed output to be placed in pupil's books. When printing a page-break is inserted between the full data table and the per-column tables, the printed output attempts to not split tables across pages. To include the cell colours in a print out it may be necessary to enable background colours in your browser's print settings.
+
+### Excel Files
+
+When the HTML file is saved a Microsoft Excel file is also saved with the same name. The Excel file's main worksheet contains the whole table, an additional worksheet is added for each column. Changing a title or value in the main worksheet will also change the title or value in the other worksheets (but *not* vice-versa), the text on worksheet tabs are *not* updated. Changing a value will also change its colour.
+
+Changes made to the Excel file can *not* be loaded back into back into the KAT application, also adding rows or columns in the Excel file will *not* duplicate the added data across all worksheets and colours will *not* automatically be applied to data in the new rows and columns.
+
+**The Excel file is mainly provided for institutions that will not accept a HTML file for such records and should be treated as an output only file.**
 
 # Notices
 
