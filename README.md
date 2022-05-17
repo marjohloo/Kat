@@ -1,4 +1,4 @@
-# Kerry's Assessment Tracker v1.0.5
+# ![icon](images/avataaars48.png) Kerry's Assessment Tracker v1.0.5
 
 A tool to track pupil progress using a simple traffic light system.
 
