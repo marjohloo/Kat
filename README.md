@@ -2,6 +2,8 @@
 
 A tool to track pupil progress using a simple traffic light system.
 
+*This NC branch uses a custom layout in the excel file just for Kerry*
+
 ## Installation
 
 Extract the ZIP file to a folder on your Windows PC and run Kat.exe.
