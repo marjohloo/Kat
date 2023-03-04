@@ -68,6 +68,9 @@ class Kat:
         self.window.columnconfigure(0, weight=1)
         # Extract colors from window theme
         self.colors = self.window.style.colors
+        self.colors.set("success", "#c4d79b")
+        self.colors.set("warning", "#ffcc66")
+        self.colors.set("danger", "#da9694")
         # Create window menu
         self.window.option_add("*tearOff", FALSE)
         #self.toplevel = ttk.Toplevel(self.window)
@@ -306,7 +309,7 @@ class Kat:
         elif cell_value == "1":
             cell_html += ' class="danger"'
         else:
-            cell_html += ' class="secondary"'
+            cell_html += ' class="light"'
         if col > 0 and row == row_width:
             cell_html += f' width="{int(100/(self.cols+1))}%"'
         cell_html += f'>{cell_value}<'
@@ -341,7 +344,7 @@ class Kat:
                 f.write( '        .page             { page-break-before: always; }\n')
                 f.write( '        .left             { text-align: left; }\n')
                 f.write(f'        .primary          {{ background: {self.colors.get("primary")}; }}\n')
-                f.write(f'        .secondary        {{ background: {self.colors.get("secondary")}; }}\n')
+                f.write(f'        .light            {{ background: {self.colors.get("light")}; }}\n')
                 f.write(f'        .success          {{ background: {self.colors.get("success")}; }}\n')
                 f.write(f'        .warning          {{ background: {self.colors.get("warning")}; }}\n')
                 f.write(f'        .primary          {{ background: {self.colors.get("primary")}; }}\n')
@@ -396,7 +399,7 @@ class Kat:
             # Open file
             with xlsxwriter.Workbook(filename) as w:
                 # Get widths from biggest row/column titles
-                width_row = 10
+                width_row = 55
                 width_col = 10
                 for row in range(self.rows):
                     if len(self.cell_value(row, 0)) > width_row:
@@ -405,14 +408,14 @@ class Kat:
                     if len(self.cell_value(0, col)) > width_col:
                         width_col = len(self.cell_value(0, col))
                 # Set formats
-                format_normal    = w.add_format()
-                format_bold      = w.add_format({"bold" : 1})
-                format_primary   = w.add_format({"bg_color" : self.colors.get("primary")})
-                format_secondary = w.add_format({"bg_color" : self.colors.get("secondary")})
-                format_success   = w.add_format({"bg_color" : self.colors.get("success")})
-                format_warning   = w.add_format({"bg_color" : self.colors.get("warning")})
-                format_danger    = w.add_format({"bg_color" : self.colors.get("danger")})
-                format_info      = w.add_format({"bg_color" : self.colors.get("info")})
+                format_normal    = w.add_format({"border" : 1})
+                format_bold      = w.add_format({"border" : 1, "bg_color" : self.colors.get("light"), "bold" : 1})
+                format_primary   = w.add_format({"border" : 1, "bg_color" : self.colors.get("primary")})
+                format_light     = w.add_format({"border" : 1, "bg_color" : self.colors.get("light")})
+                format_success   = w.add_format({"border" : 1, "bg_color" : self.colors.get("success")})
+                format_warning   = w.add_format({"border" : 1, "bg_color" : self.colors.get("warning")})
+                format_danger    = w.add_format({"border" : 1, "bg_color" : self.colors.get("danger")})
+                format_info      = w.add_format({"border" : 1, "bg_color" : self.colors.get("info")})
                 # Create worksheet
                 worksheet = w.add_worksheet(self.cell_value(0,0))
                 # Loop through cells
@@ -420,9 +423,9 @@ class Kat:
                     for col in range(self.cols):
                         # Set cell data
                         if row > 0 and col > 0:
-                            worksheet.write(row, col, int(self.cell_value(row, col)))
+                            worksheet.write(row, col, int(self.cell_value(row, col)), format_light)
                         else:
-                            worksheet.write(row, col, self.cell_value(row, col), format_bold)
+                            worksheet.write(row, col, self.cell_value(row, col), format_light)
                 # Set column widths
                 worksheet.set_column(0, 0,           width_row)
                 worksheet.set_column(1, self.cols-1, width_col)
@@ -442,41 +445,84 @@ class Kat:
                 worksheet.conditional_format(1, 1, self.rows-1, self.cols-1, {"type"     : "cell",
                                                                               "criteria" : "==",
                                                                               "value"    : 0,
-                                                                              "format"   : format_secondary})
+                                                                              "format"   : format_light})
                 # Output individual data
                 for col in range(1, self.cols):
                     # Create worksheet
                     worksheet = w.add_worksheet(self.cell_value(0,col))
-                    for row in range(self.rows):
+                    row_count = 0
+                    # Build reference to title in main worksheet
+                    xl_cell_ref = f"='{self.cell_value(0, 0)}'!{xl_rowcol_to_cell(0, 0)}"
+                    worksheet.write(row_count, 0, xl_cell_ref, format_bold)
+                    row_count += 1
+                    # Build reference to name in main worksheet
+                    xl_cell_ref = f"='{self.cell_value(0, 0)}'!{xl_rowcol_to_cell(0, col)}"
+                    worksheet.write(row_count, 0, xl_cell_ref, format_bold)
+                    row_count += 1
+                    # Skip a row
+                    row_count += 1
+                    # Build title row
+                    worksheet.write(row_count, 0, "What you need to do", format_bold)
+                    worksheet.write(row_count, 1, "Mark", format_bold)
+                    worksheet.write(row_count, 2, "Max", format_bold)
+                    row_count += 1;
+                    rows_top = row_count
+                    # Set column widths
+                    worksheet.set_column(0, 0, width_row)
+                    worksheet.set_column(1, 1, width_col)
+                    worksheet.set_column(1, 2, width_col)
+                    for row in range(1, self.rows):
                         # Build reference to row title in main worksheet
                         xl_cell_ref = f"='{self.cell_value(0, 0)}'!{xl_rowcol_to_cell(row, 0)}"
-                        worksheet.write(row, 0, xl_cell_ref, format_bold)
+                        worksheet.write(row+rows_top-1, 0, xl_cell_ref, format_light)
                         # Build reference to data in main worksheet
                         xl_cell_ref = f"='{self.cell_value(0, 0)}'!{xl_rowcol_to_cell(row, col)}"
-                        if row > 0:
-                            worksheet.write(row, 1, xl_cell_ref)
-                        else:
-                            worksheet.write(row, 1, xl_cell_ref, format_bold)
-                        # Set column widths
-                        worksheet.set_column(0, 0, width_row)
-                        worksheet.set_column(1, 1, width_col)
+                        worksheet.write(row+rows_top-1, 1, xl_cell_ref, format_light)
+                        # Put in max mark
+                        worksheet.write(row+rows_top-1, 2, 3, format_light)
                         # Set conditional formatting
-                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                        worksheet.conditional_format(3, 1, self.rows+rows_top-1, 2, {"type"     : "cell",
+                                                                            "criteria" : ">",
+                                                                            "value"    : 3,
+                                                                            "format"   : format_light})
+                        worksheet.conditional_format(3, 1, self.rows+rows_top-1, 2, {"type"     : "cell",
                                                                             "criteria" : "==",
                                                                             "value"    : 3,
                                                                             "format"   : format_success})
-                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                        worksheet.conditional_format(3, 1, self.rows+rows_top-1, 2, {"type"     : "cell",
                                                                             "criteria" : "==",
                                                                             "value"    : 2,
                                                                             "format"   : format_warning})
-                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                        worksheet.conditional_format(3, 1, self.rows+rows_top-1, 2, {"type"     : "cell",
                                                                             "criteria" : "==",
                                                                             "value"    : 1,
                                                                             "format"   : format_danger})
-                        worksheet.conditional_format(1, 1, self.rows-1, 1, {"type"     : "cell",
+                        worksheet.conditional_format(3, 1, self.rows+rows_top-1, 2, {"type"     : "cell",
                                                                             "criteria" : "==",
                                                                             "value"    : 0,
-                                                                            "format"   : format_secondary})
+                                                                            "format"   : format_light})
+                        # Keep track of rows
+                        row_count += 1
+                    # Write totals
+                    worksheet.write(row_count, 0, "Total", format_bold)
+                    xl_cell_formula = f"=SUM({xl_rowcol_to_cell(rows_top, 1)}:{xl_rowcol_to_cell(row_count-1, 1)})"
+                    worksheet.write(row_count, 1, xl_cell_formula, format_bold)
+                    xl_cell_formula = f"=SUM({xl_rowcol_to_cell(rows_top, 2)}:{xl_rowcol_to_cell(row_count-1, 2)})"
+                    worksheet.write(row_count, 2, xl_cell_formula, format_bold)
+                    row_count += 1
+                    # Skip a row
+                    row_count += 1
+                    # Output legend
+                    worksheet.write(row_count, 0, "You need more practice on this skill", format_light)
+                    worksheet.write(row_count, 1, "", format_danger)
+                    row_count += 1
+                    worksheet.write(row_count, 0, "You are able to do part of this skill but it needs more work", format_light)
+                    worksheet.write(row_count, 1, "", format_warning)
+                    row_count += 1
+                    worksheet.write(row_count, 0, "You are good at this skill", format_light)
+                    worksheet.write(row_count, 1, "", format_success)
+                    row_count += 1
+
 
     def filename_set(self, filename):
         # Retain filename

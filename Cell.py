@@ -182,7 +182,7 @@ class Cell:
         elif value == "1":
             self.button.configure(bootstyle="danger")
         else:
-            self.button.configure(bootstyle="secondary")
+            self.button.configure(bootstyle="light")
 
     def grid(self):
         self.frame.grid(column=self.col, row=self.row, sticky=(W, S, E))
